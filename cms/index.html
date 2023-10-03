@@ -1,0 +1,56 @@
+<html>
+<head>
+	<title>타로 CMS</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="/lib/bootstrap-5.1.3-dist/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/lib/fontawesome-free-5.10.1-web/css/fontawesome.min.css">
+	<link rel="stylesheet" type="text/css" href="/lib/fontawesome-free-5.10.1-web/css/brands.min.css">
+	<link rel="stylesheet" type="text/css" href="/lib/fontawesome-free-5.10.1-web/css/solid.min.css">
+	<link rel="stylesheet" type="text/css" href="./css/cms.css">
+
+	<script type="text/javascript" src="/lib/jquery-3.4.1.min.js"></script>
+	<script type="text/javascript" src="/lib/bootstrap-5.1.3-dist/js/bootstrap.min.js"></script>
+
+	<script type="text/javascript" src="./js/util.js"></script>
+	<script type="text/javascript" src="./js/cms_control.js"></script>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-12 border">
+				CMS
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-1 border" id="id_div_fortune_list"></div>
+			<div class="col-11 border" id="id_div_tarot_card_list"></div>
+		</div>
+	</div>
+</body>
+</html>
+
+<!-- Modal -->
+<div class="modal fade" id="id_modal_tarot_edit" tabindex="-1" aria-labelledby="id_label_modal_fortune" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="id_label_modal_fortune"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-2" id="id_img_selected_tarot"></div>
+						<div class="col-10">
+							<textarea id="id_textarea_tarot_read" cols="70" rows="10"></textarea>
+						</div>
+					</div>
+				</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="id_btn_save_tarot_read">저장</button>
+      </div>
+    </div>
+  </div>
+</div>

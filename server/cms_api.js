@@ -1,0 +1,60 @@
+const express = require('express');
+const router = express.Router();
+const fs = require('fs');
+
+router.post('/save_fortune_tarot_read', async function(req, res){
+	try{
+		// console.debug('req.body.fortune_key; ' + JSON.stringify(req));
+		var data = req.body;
+		console.debug('data ' + JSON.stringify(data));
+
+		fs.writeFileSync(__dirname + `/../cms/db/tarot_read_${data.fortune_key}.json`, 
+			JSON.stringify(data.tarot_read_list));
+
+		res.send({
+			ok: 1
+		});
+	}catch(err){
+		console.error(err);
+		res.send({
+			ok:0,
+			err:'Fail /save_fortune_tarot_read'
+		});
+	}
+});
+router.get('/get_base_data', async function(req, res){
+	try{
+		var fortune_list_str = fs.readFileSync(__dirname + '/../cms/db/fortune_list.json', 'utf-8');
+		var tarot_card_list_str = fs.readFileSync(__dirname + '/../cms/db/tarot_card_list.json', 'utf-8');
+		res.send({
+			ok: 1,
+			fortune_list: JSON.parse(fortune_list_str),
+			tarot_card_list: JSON.parse(tarot_card_list_str)
+		});
+	}catch(err){
+		console.error(err);
+		res.send({
+			ok:0,
+			err:'Fail /get_base_data'
+		});
+	}
+});
+router.post('/get_tarot_read_list', async function(req, res){
+	try{
+		var fortune_key = req.body.fortune_key;
+		var tarot_read_list_str = fs.readFileSync(__dirname + `/../cms/db/tarot_read_${fortune_key}.json`, 'utf-8');
+		res.send({
+			ok: 1,
+			tarot_read_list: JSON.parse(tarot_read_list_str)
+		});
+	}catch(err){
+		console.error(err);
+		res.send({
+			ok:0,
+			err:'Fail /get_base_data'
+		});
+	}
+});
+
+
+module.exports = router;
