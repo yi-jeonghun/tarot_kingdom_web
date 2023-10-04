@@ -30,7 +30,7 @@ const app = express();
 // app.set('view engine', 'ejs');
 // app.set('views', './view');
 
-http.createServer(app).listen(8080);
+http.createServer(app).listen(80);
 
 // https.createServer({
 // 	key: fs.readFileSync('/etc/letsencrypt/live/kpopschool.net/privkey.pem'),
