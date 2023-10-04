@@ -70,7 +70,7 @@ function TarotMain(){
 	};
 
 	this.LoadTarotCardList = function(){
-		GET(`/cms/db/tarot_card_list.json`, function(res){
+		GET(`../cms/db/tarot_card_list.json`, function(res){
 			self._tarot_card_list = res;
 		});
 	};
@@ -81,13 +81,13 @@ function TarotMain(){
 	};
 
 	this.LoadTarotReadList = function(){
-		GET(`/cms/db/tarot_read_${self._fortune_key}.json`, function(res){
+		GET(`../cms/db/tarot_read_${self._fortune_key}.json`, function(res){
 			self._tarot_read_list = res;
 		});
 	};
 
 	this.LoadFortuneList = function(cb){
-		GET('/cms/db/fortune_list.json', function(res){
+		GET('../cms/db/fortune_list.json', function(res){
 			self._fortune_list = res;
 			if(cb){
 				cb();
