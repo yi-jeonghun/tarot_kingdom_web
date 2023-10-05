@@ -51,16 +51,19 @@ function CMSControl(){
 		for(var i=0 ; i<self._tarot_card_list.length ; i++){
 			var tarot_card_key = self._tarot_card_list[i];
 			var on_click = `window._cms.ChooseTarotCard(${i})`;
-			h += `<div class="border">
-			<span>${i+1}</span>
-			<span><img onClick="${on_click}" src="../tarot/img/${tarot_card_key}.jpg" style="cursor:pointer; width:${width}; height:${height}"></span>
-			<span id="id_text_tarot_read-${tarot_card_key}"></span>
+			h += `<div class="container-fluid border-bottom">
+				<div class="row">
+					<div class="col-2 border-right">
+						<span class="px-1">${i+1}</span>
+						<img onClick="${on_click}" src="../tarot/img/${tarot_card_key}.jpg" style="cursor:pointer; width:${width}; height:${height}"></div>
+					<div class="col-10" id="id_text_tarot_read-${tarot_card_key}"></div>			
+				</div>
 			</div>`;
 		}
 		$('#id_div_tarot_card_list').html(h);
 
 		POST('/cms_api/get_tarot_read_list', {fortune_key:fortune_key}, function(res){
-			console.debug('res ' + JSON.stringify(res));
+			// console.debug('res ' + JSON.stringify(res));
 			if(res.ok){
 				self._tarot_read_list = res.tarot_read_list;
 				for(var i=0 ; i<self._tarot_read_list.length ; i++){
