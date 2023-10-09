@@ -21,15 +21,21 @@ function TarotFortuneControl(){
 		for(var i=0 ; i<window._tarot_main._fortune_list.length ; i++){
 			var key = window._tarot_main._fortune_list[i].key;
 			var name = window._tarot_main._fortune_list[i].name;
+			var on_click = `window._tarot_fortune_control.ChooseFortune('${key}')`;
 			h += `
-			<div class="btn btn-light" id="id_btn_love" onCLick="window._tarot_fortune_control.ChooseFortune('${key}')">${name}</div>
+			<div class="btn btn-light" onCLick="${on_click}">${name}</div>
 			`;
 		}
 		$('#id_div_fortune_list').html(h);
 	};
 
 	this.ChooseFortune = function(fortune_key){
-		window._tarot_main.SelectFortune(fortune_key);
-		window._tarot_main.OpenMenu('tarot_card', 1);
+		if(window._tarot_main.FortuneHasSubQuestion(fortune_key)){
+			window._tarot_main.SetSelectedFortuneKey(fortune_key);
+			window._tarot_main.OpenMenu('tarot_question', 1);
+		}else{
+			window._tarot_main.SelectFortune(fortune_key);
+			window._tarot_main.OpenMenu('tarot_card', 1);
+		}
 	};
 }

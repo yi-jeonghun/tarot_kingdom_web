@@ -2,16 +2,45 @@ $('document').ready(function(){
 	window._tarot_main = new TarotMain().Init();
 });
 
+function AppExit(){
+	if (navigator.app) {
+    navigator.app.exitApp();
+	} else if (navigator.device) {
+		navigator.device.exitApp();
+	} else {
+		window.close();
+	}
+}
+
 function TarotMain(){
 	var self = this;
 
 	this._tarot_card_list = [];
 	this._fortune_list = [];
+	this._fortune_sub_question_list = [];
 	this._tarot_read_list = [];
 
-	this._fortune_key = null;
-	this._question = null;
+	this._selected_fortune_key = null;
+	this._selected_fortune_sub_question_index = null;
 	this._tarot_card_key = null;
+
+	this.SetSelectedFortuneKey = function(key){
+		self._selected_fortune_key = key;
+	};
+
+	this.GetSelectedFortuneKey = function(){
+		return self._selected_fortune_key;
+	};
+
+	this.GetFortuneSubQuestionList = function(fortune_key){
+		var list = [];
+		for(var i=0 ; i<self._fortune_sub_question_list.length ; i++){
+			if(self._fortune_sub_question_list[i].parent_fortune_key == fortune_key){
+				list.push(self._fortune_sub_question_list[i]);
+			}
+		}
+		return list;
+	};
 
 	this.Init = function(){
 		self.LoadTarotCardList();
@@ -24,7 +53,7 @@ function TarotMain(){
 	this._control_key_holding = false;
 	this.InitHandle = function(){
 		window.addEventListener("keydown", (event) => {
-			console.debug('event.key ' + event.key);
+			// console.debug('event.key ' + event.key);
 			if (event.defaultPrevented) {
 				return;
 			}
@@ -115,12 +144,18 @@ function TarotMain(){
 	};
 
 	this.SelectFortune = function(fortune_key){
-		self._fortune_key = fortune_key;
-		self.LoadTarotReadList();
+		self._selected_fortune_key = fortune_key;
+		self.LoadTarotReadList(self._selected_fortune_key);
 	};
 
-	this.LoadTarotReadList = function(){
-		GET(`../cms/db/tarot_read_${self._fortune_key}.json`, function(res){
+	this.SelectFortuneSubQuestion = function(sub_question_index){
+		self._selected_fortune_sub_question_index = sub_question_index;
+		var key = self._selected_fortune_key + '-' + self._selected_fortune_sub_question_index;
+		self.LoadTarotReadList(key);
+	};
+
+	this.LoadTarotReadList = function(key){
+		GET(`../cms/db/tarot_read_${key}.json`, function(res){
 			self._tarot_read_list = res;
 		});
 	};
@@ -132,15 +167,29 @@ function TarotMain(){
 				cb();
 			}
 		});
+		GET('../cms/db/fortune_sub_question_list.json', function(res){
+			self._fortune_sub_question_list = res;
+		});
 	};
 
 	this.GetSelectedFortuneName = function(){
 		for(var i=0 ; i<self._fortune_list.length ; i++){
-			if(self._fortune_list[i].key == self._fortune_key){
+			if(self._fortune_list[i].key == self._selected_fortune_key){
 				return self._fortune_list[i].name;
 			}
 		}
 		return '';
+	};
+
+	this.FortuneHasSubQuestion = function(fortune_key){
+		for(var i=0 ; i<self._fortune_list.length ; i++){
+			if(self._fortune_list[i].key == fortune_key){
+				if(self._fortune_list[i].has_sub_question){
+					return true;
+				}
+			}
+		}
+		return false;
 	};
 
 	//-------------------------------------------------------------
