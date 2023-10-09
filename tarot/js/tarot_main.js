@@ -18,11 +18,50 @@ function TarotMain(){
 		self.InitHandle();
 		self.OpenMenu('tarot_fortune', 1);
 		self.InitMessageHandler();
-		self.InitPullToRequest();
 		return this;
 	};
 
+	this._control_key_holding = false;
 	this.InitHandle = function(){
+		window.addEventListener("keydown", (event) => {
+			console.debug('event.key ' + event.key);
+			if (event.defaultPrevented) {
+				return;
+			}
+		
+			switch(event.key){
+				case 'Control':
+					self._control_key_holding = true;
+					break;
+				case 'r':
+					if(self._control_key_holding){
+						self.OpenMenu(self._menu_current, 1);
+					}
+					break;
+			}
+
+			let handled = false;
+			if (handled) {
+				event.preventDefault();
+			}
+		}, true);
+
+		window.addEventListener("keyup", (event) => {
+			if (event.defaultPrevented) {
+				return;
+			}
+	
+			switch(event.key){
+				case 'Control':
+					self._control_key_holding = false;
+					break;
+			}
+
+			let handled = false;
+			if (handled) {
+				event.preventDefault();
+			}
+		}, true);
 	};
 
 	this.InitMessageHandler = function(){
@@ -109,9 +148,11 @@ function TarotMain(){
 	this._menu_loaded_tarot_question = false;
 	this._menu_loaded_tarot_card = false;
 	this._menu_loaded_tarot_result = false;
+	this._menu_current = '';
 	
 	this.OpenMenu = function(menu, reload){
-		console.log('menu ' + menu);
+		// console.log('menu ' + menu);
+		self._menu_current = menu;
 		$('#id_menu_tarot_fortune').hide();
 		$('#id_menu_tarot_question').hide();
 		$('#id_menu_tarot_card').hide();
@@ -151,66 +192,5 @@ function TarotMain(){
 				}
 				break;
 		}
-	};
-
-	this.InitPullToRequest = function(div_name, menu){
-		// console.log('init pull refresh ' + div_name + ' ' + menu);
-		return;
-
-		PullToRefresh.init({
-			mainElement: '#id_menu_home',
-			triggerElement: '#id_menu_home',
-			onRefresh: function () {
-				self.OpenMenu('home', true);
-			},
-			shouldPullToRefresh: function(){
-				return !this.mainElement.scrollTop;
-			}
-		});
-
-		PullToRefresh.init({
-			mainElement: '#id_menu_multi',
-			triggerElement: '#id_menu_multi',
-			onRefresh: function () {
-				self.OpenMenu('multi', true);
-			},
-			shouldPullToRefresh: function(){
-				return !this.mainElement.scrollTop;
-			}
-		});
-
-		PullToRefresh.init({
-			mainElement: '#id_menu_single',
-			triggerElement: '#id_menu_single',
-			onRefresh: function () {
-				self.OpenMenu('single', true);
-			},
-			shouldPullToRefresh: function(){
-				return !this.mainElement.scrollTop;
-			}
-		});
-		
-		PullToRefresh.init({
-			mainElement: '#id_menu_artist',
-			triggerElement: '#id_menu_artist',
-			onRefresh: function () {
-				self.OpenMenu('artist', true);
-			},
-			shouldPullToRefresh: function(){
-				return !this.mainElement.scrollTop;
-			}
-		});
-
-		PullToRefresh.init({
-			mainElement: '#id_menu_my',
-			triggerElement: '#id_menu_my',
-			onRefresh: function () {
-				self.OpenMenu('my', true);
-			},
-			shouldPullToRefresh: function(){
-				return !this.mainElement.scrollTop;
-			}
-		});
-
 	};
 }

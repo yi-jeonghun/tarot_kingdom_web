@@ -22,19 +22,82 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-1 col-md-2 border" id="id_div_fortune_list"></div>
-			<div class="col-11 col-md-10 border" id="id_div_tarot_card_list"></div>
+			<div class="col-1 col-md-3 border">
+				<div style="width: 100%;" class="text-end">
+					<button type="button" class="btn btn-sm btn-primary" id="id_btn_fortune_add">Add</button>
+				</div>
+				<table class="table">
+					<tr>
+						<th>Key</th>
+						<th>Name</th>	
+						<th></th>	
+					</tr>
+					<tbody id="id_div_fortune_list">
+					</tbody>
+				</table>
+			</div>
+			<div class="col-11 col-md-9 border" id="id_div_tarot_card_list"></div>
 		</div>
 	</div>
 </body>
 </html>
 
-<!-- Modal -->
-<div class="modal fade" id="id_modal_tarot_edit" tabindex="-1" aria-labelledby="id_label_modal_fortune" aria-hidden="true">
+<!-- 운세 추가 모달 -->
+<div class="modal fade" id="id_modal_fortund_edit" tabindex="-1" aria-labelledby="id_label_modal_fortune_edit" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+				운세 추가
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+				<div>
+					Key <input type="text" class="form-control" id="id_text_fortune_key">
+				</div>
+				<div style="margin-top: 20px;">
+					Name <input type="text" class="form-control" id="id_text_fortune_name">
+				</div>
+				<div style="margin-top: 20px;">
+					부가 질문 있음 <input type="checkbox" id="id_checkbox_fortune_has_sub_question">
+				</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="id_btn_fortune_add_save">저장</button>
+        <button type="button" class="btn btn-primary" id="id_btn_fortune_edit_save">저장</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sub Question -->
+<div class="modal fade" id="id_modal_sub_question" tabindex="-1" aria-labelledby="" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+				Sub Question
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+				<div>
+					<input type="text" class="form-control" id="id_text_sub_question">
+				</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="id_btn_sub_question_save">저장</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- 타로 카드 편집 모달 -->
+<div class="modal fade" id="id_modal_tarot_edit" tabindex="-1" aria-labelledby="id_modal_fortune_title" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="id_label_modal_fortune"></h5>
+        <h5 class="modal-title" id="id_modal_fortune_title"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
