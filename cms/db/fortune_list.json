@@ -1,1 +1,1 @@
-[{"key":"reunion","name":"재회운","has_sub_question":true},{"key":"love","name":"연애운","has_sub_question":true},{"key":"business","name":"사업운","has_sub_question":false},{"key":"job","name":"취직운","has_sub_question":false},{"key":"fortune","name":"재물운","has_sub_question":false}]
+[{"key":"reunion","name":"재회운","has_sub_question":false},{"key":"love","name":"연애운","has_sub_question":true},{"key":"business","name":"사업운","has_sub_question":false},{"key":"job","name":"취직운","has_sub_question":false},{"key":"fortune","name":"재물운","has_sub_question":false}]
