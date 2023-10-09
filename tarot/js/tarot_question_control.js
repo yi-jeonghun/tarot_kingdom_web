@@ -20,7 +20,7 @@ function TarotQuestionControl(){
 	this.ChooseQuestion = function(question_index){
 		console.debug('question_index ' + question_index);
 		window._tarot_main.SelectFortuneSubQuestion(question_index);
-		window._tarot_main.OpenMenu('tarot_card');
+		window._tarot_main.OpenMenu('tarot_card', 1);
 	};
 
 	this.DISP_QuestionList = function(){

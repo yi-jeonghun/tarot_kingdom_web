@@ -286,6 +286,7 @@ function CMSControl(){
 		var tarot_card_key = self._tarot_card_list[idx];
 		$('#id_img_selected_tarot').html(`<img src="../tarot/img/${tarot_card_key}.jpg" style="cursor:pointer; width:${width}; height:${height}">`);;
 
+		$('#id_textarea_tarot_read').val('');
 		for(var i=0 ; i<self._tarot_read_list.length ; i++){
 			if(self._tarot_read_list[i].key == tarot_card_key){
 				$('#id_textarea_tarot_read').val(self._tarot_read_list[i].read);
