@@ -7,6 +7,9 @@ function TarotQuestionControl(){
 	this._fortune_sub_question_list = [];
 
 	this.Init = function(){
+		var fortune_name = window._tarot_main.GetSelectedFortuneName();
+		console.debug('fortune_name ' + fortune_name);
+		$('#id_label_question_fortune_name').html(fortune_name);
 		self.LoadSubQueationList();
 		return this;
 	};

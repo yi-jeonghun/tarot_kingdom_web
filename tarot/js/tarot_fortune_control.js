@@ -23,7 +23,7 @@ function TarotFortuneControl(){
 			var name = window._tarot_main._fortune_list[i].name;
 			var on_click = `window._tarot_fortune_control.ChooseFortune('${key}')`;
 			h += `
-			<div class="btn btn-light" onCLick="${on_click}">${name}</div>
+			<div onClick="${on_click}" class="border m-2 p-4" style="cursor:pointer; font-size:2em">${name}</div>
 			`;
 		}
 		$('#id_div_fortune_list').html(h);
