@@ -82,5 +82,22 @@ router.post('/save_sub_question_list', async function(req, res){
 		});
 	}
 });
+router.post('/delete_sub_question_file', async function(req, res){
+	try{
+		var fortune_key = req.body.fortune_key;
+		var question_index = req.body.fortune_key;
+		fs.unlinkSync(__dirname + `/../cms/db/tarot_read_${fortune_key}-${question_index}.json`);
+		res.send({
+			ok: 1
+		});
+	}catch(err){
+		console.error(err);
+		res.send({
+			ok:0,
+			err:'Fail /save_sub_question_list'
+		});
+	}
+});
+
 
 module.exports = router;

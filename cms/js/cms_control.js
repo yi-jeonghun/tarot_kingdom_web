@@ -66,11 +66,14 @@ function CMSControl(){
 				if(self._fortune_sub_question_list[s].parent_fortune_key == fortune.key){
 					h += `
 					<tr>
-						<td> > ${self._fortune_sub_question_list[s].index+1}</td>
+						<td>&nbsp; &nbsp; > ${self._fortune_sub_question_list[s].index+1}</td>
 						<td>
 							<span onClick="window._cms.ChooseFortuneQuestion(${i}, ${self._fortune_sub_question_list[s].index})" style="cursor:pointer">${self._fortune_sub_question_list[s].question}</span>
 						</td>
-						<td><i onClick="window._cms.OpenSubQuestionModal('${fortune.key}', 'edit', ${s})" style="cursor:pointer" class="fas fa-edit"></i></td>
+						<td>
+							<i onClick="window._cms.OpenSubQuestionModal('${fortune.key}', 'edit', ${self._fortune_sub_question_list[s].index})" style="cursor:pointer" class="fas fa-edit"></i>
+							<i onClick="window._cms.DeleteQuestion('${fortune.key}', ${self._fortune_sub_question_list[s].index})" style="cursor:pointer" class="fas fa-trash"></i>
+						</td>
 					</tr>
 					`;
 				}
@@ -78,6 +81,31 @@ function CMSControl(){
 
 		}
 		$('#id_div_fortune_list').html(h);
+	};
+
+	this.DeleteQuestion = function(fortune_key, question_index){
+		if(confirm('진짜 지우는 거 맞지?') == false){
+			return;
+		}
+
+		for(var i=0 ; i<self._fortune_sub_question_list.length ; i++){
+			if(self._fortune_sub_question_list[i].parent_fortune_key == fortune_key){
+				if(self._fortune_sub_question_list[i].index == question_index){
+					self._fortune_sub_question_list.splice(i, 1);
+					break;
+				}
+			}
+		}
+
+		POST('/cms_api/save_sub_question_list', self._fortune_sub_question_list, function(res){
+			var req = {
+				fortune_key: fortune_key,
+				question_index: question_index
+			}
+			POST('/cms_api/delete_sub_question_file', req, function(res){
+				self.DISP_FortuneList();
+			});	
+		});
 	};
 
 	this._sub_question_mode = '';
@@ -216,35 +244,53 @@ function CMSControl(){
 
 	this._width = 300 / 3;
 	this._height = 532 / 3;
+	this._selected_fortune_and_question_key = '';
 	this.ChooseFortune = function(idx){
 		self._selected_fortune_idx = idx;
 		self._selected_sub_question_index = null;
-		var fortune_key = self._fortune_list[idx].key;
+		self._selected_fortune_and_question_key = self._fortune_list[idx].key;
 
-		self.DISP_RarotCardList(fortune_key);
+		self.DISP_RarotCardList(self._selected_fortune_and_question_key);
 	};
 
 	this.ChooseFortuneQuestion = function(fortune_index, sub_question_index){
 		self._selected_fortune_idx = fortune_index;
 		self._selected_sub_question_index = sub_question_index;
-		var fortune_key = self._fortune_list[fortune_index].key + '-' + sub_question_index;
+		self._selected_fortune_and_question_key = self._fortune_list[fortune_index].key + '-' + sub_question_index;
 
-		self.DISP_RarotCardList(fortune_key);
+		self.DISP_RarotCardList(self._selected_fortune_and_question_key);
+	};
+
+	this._filter_type = 'all';
+	this.Filter = function(filter_type){
+		self._filter_type = filter_type;
+		self.DISP_RarotCardList(self._selected_fortune_and_question_key);
 	};
 
 	this.DISP_RarotCardList = function(fortune_key){
 		var h = ``;
 		for(var i=0 ; i<self._tarot_card_list.length ; i++){
 			var tarot_card_key = self._tarot_card_list[i];
+
+			if(self._filter_type != 'all'){
+				if(self._filter_type == '계급'){
+					if(tarot_card_key.indexOf('page') != -1 || tarot_card_key.indexOf('knight') != -1 || tarot_card_key.indexOf('queen') != -1 || tarot_card_key.indexOf('king') != -1){
+					}else{
+						continue;
+					}
+				}else{
+					if(tarot_card_key.startsWith(self._filter_type) == false){
+						continue;
+					}	
+				}
+			}
+
 			var on_click = `window._cms.ChooseTarotCard(${i})`;
-			h += `<div class="container-fluid border-bottom">
-				<div class="row">
-					<div class="col-2 border-right">
-						<span class="px-1">${i+1}</span>
-						<img onClick="${on_click}" src="../tarot/img/${tarot_card_key}.jpg" style="cursor:pointer; width:${self._width}; height:${self._height}"></div>
-					<div class="col-10" id="id_text_tarot_read-${tarot_card_key}"></div>			
-				</div>
-			</div>`;
+			h += `<tr>
+				<td>${i+1}</td>
+				<td><img onClick="${on_click}" src="../tarot/img/${tarot_card_key}.jpg" style="cursor:pointer; width:${self._width}; height:${self._height}"></td>
+				<td colspan='2' id="id_text_tarot_read-${tarot_card_key}"></td>
+			</tr>`;
 		}
 		$('#id_div_tarot_card_list').html(h);
 
@@ -254,7 +300,11 @@ function CMSControl(){
 				self._tarot_read_list = res.tarot_read_list;
 				for(var i=0 ; i<self._tarot_read_list.length ; i++){
 					var tarot = self._tarot_read_list[i];
-					$(`#id_text_tarot_read-${tarot.key}`).html(tarot.read);
+					var h = `
+					<div class="border-bottom py-1">${tarot.key}</div>
+					<div class="py-1">${tarot.read}</div>
+					`;
+					$(`#id_text_tarot_read-${tarot.key}`).html(h);
 				}
 			}
 		})

@@ -14,15 +14,10 @@
 	<script type="text/javascript" src="./js/util.js"></script>
 	<script type="text/javascript" src="./js/cms_control.js"></script>
 </head>
-<body>
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-12 border">
-				CMS
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-1 col-md-3 border">
+<body style="width: 100%; height: 100%;">
+	<div class="container-fluid" style="width: 100%; height: 100%;">
+		<div class="row" style="width: 100%; height: 100%;">
+			<div class="col-1 col-md-4 border" style="height: 100%;">
 				<div style="width: 100%;" class="text-end">
 					<button type="button" class="btn btn-sm btn-primary" id="id_btn_fortune_add">Add</button>
 				</div>
@@ -30,13 +25,35 @@
 					<tr>
 						<th>Key</th>
 						<th>Name</th>	
-						<th></th>	
+						<th>Edit</th>	
 					</tr>
 					<tbody id="id_div_fortune_list">
 					</tbody>
 				</table>
 			</div>
-			<div class="col-11 col-md-9 border" id="id_div_tarot_card_list"></div>
+			<div class="col-11 col-md-8 border" style="height: 100%; overflow: auto;">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>No</th>
+							<th>Card</th>
+							<th>Read</th>
+							<th class="text-end">
+								<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('all')">All</button>
+								<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('ar')">Major</button>
+								<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('cups')">Cups</button>
+								<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('pentacles')">Pentacles</button>
+								<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('swords')">Swords</button>
+								<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('wands')">Wands</button>
+								<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('계급')">계급</button>
+							</th>
+						</tr>	
+					</thead>
+					<tbody id="id_div_tarot_card_list">
+
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </body>
