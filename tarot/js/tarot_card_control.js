@@ -38,6 +38,7 @@ function TarotCardControl(){
 	this._bottom_card_pos = {x:0, y:0};
 	this._delay_incresement = 5;//5 milli seonds
 	this._screen_touched = false;
+	this._focused_index = -1;
 
 	this.Init = function(){
 		self.InitCanvas();
@@ -57,11 +58,7 @@ function TarotCardControl(){
 		self._canvas.addEventListener("mousedown", (e) => {
 			e.preventDefault();
 			e.stopPropagation();
-			// var x = e.offsetX;
-			// var y = e.offsetY;
-			// // isDrawing = true;
 			self._screen_touched = true;
-			// console.debug('mouse down x ' + x + ' y ' + y);
 		});
 		self._canvas.addEventListener("mouseup", (e) => {
 			e.preventDefault();
@@ -75,21 +72,17 @@ function TarotCardControl(){
 			e.stopPropagation();
 			var x = e.offsetX;
 			var y = e.offsetY;
-			// isDrawing = true;
 			if(self._screen_touched){
 				if(prev_x != -100 && prev_y != -100){
 					var diff_x = x - prev_x;
 					var diff_y = y - prev_y;
-					// console.debug('diff ' + diff_x + ' ' + diff_y);
 					if(diff_y > 0){
-						// console.debug('rotate right ');
 						if(diff_y > 5){
 							diff_y = 5;
 						}
 						self.Rotate(diff_y);
 					}
 					if(diff_y < 0){
-						// console.debug('rotate left ');
 						if(diff_y < -5){
 							diff_y = -5;
 						}
@@ -125,6 +118,7 @@ function TarotCardControl(){
 			var card = self._card_list[i];
 			if(i == focusing_index){
 				card.Focus();
+				self._focused_index = i;
 			}else{
 				card.Defocus();
 			}
@@ -139,13 +133,19 @@ function TarotCardControl(){
 	};
 
 	this.InitCardList = function(){
+		var tmp_card_list = [];
+		for(var i=0 ; i<window._tarot_main._tarot_card_list.length ; i++){
+			tmp_card_list.push(window._tarot_main._tarot_card_list[i]);
+		};
+		tmp_card_list.sort(() => Math.random() - 0.5);
+
 		var x = self._top_card_pos.x;
 		var y = self._top_card_pos.y;
 		for(var i=0 ; i<self._card_count ; i++){
-			var card_id = 'card-'+i;
+			var card_id = tmp_card_list[i];
 			var card = new Card(self._ctx, x, y, self._card_size.w, self._card_size.h, card_id);
 			self._card_list.push(card);
-			// console.debug('x ' + x + ' y ' + y);
+			// console.debug('card id ' + card_id);
 			x = x + self._thick;
 			y = y + self._thick;
 		}
@@ -175,16 +175,10 @@ function TarotCardControl(){
 		}
 	};
 
-	this.DISP_CardList = function(){
-		var width = 300 / 3;
-		var height = 532 / 3;
-		var h = '';
-		for(var i=0 ; i<window._tarot_main._tarot_card_list.length ; i++){
-			var tarot_card_key = window._tarot_main._tarot_card_list[i];
-			var on_click = `window._tarot_card_control.ChooseCard('${tarot_card_key}')`;
-			h += `<img class="border" onClick="${on_click}" style="width:${width}px;height:${height}px; cursor:pointer" src='./img/tarot_back.jpg'>`;
+	this.SelectCard = function(){
+		if(self._focused_index != -1){
+			self.ChooseCard(self._card_list[self._focused_index]._card_id);
 		}
-		$('#id_div_card_list').html(h);
 	};
 
 	this.ChooseCard = function(tarot_card_key){
