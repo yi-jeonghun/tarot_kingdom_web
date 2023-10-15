@@ -14,9 +14,18 @@ function Card(ctx, x, y, w, h, card_id){
 	this._speed = 0.3;
 	this._angle = 0;
 	this._target_angle = 0;
+	this._target_width = w;
+	this._target_height = h;
 	this._rotating = false;
 	this._is_focused = false;
 	this._direction = 'right';
+	this._card_img = null;
+	this._show_card = false;
+
+	this.Init = function(){
+		self._card_img = new Image();
+		self._card_img.src = `./img/${self._card_id}.jpg`;
+	};
 
 	this.MoveTo = function(x, y, delay){
 		self._tx = x;
@@ -114,10 +123,17 @@ function Card(ctx, x, y, w, h, card_id){
 		}
 		ny = ny - self._focusing_value;
 
-		self._ctx.drawImage(
-			self._img.img, 
-			nx, ny, self.w, self.h
-		);
+		if(self._show_card){
+			self._ctx.drawImage(
+				self._card_img,
+				nx, ny, self.w, self.h
+			);
+		}else{
+			self._ctx.drawImage(
+				self._img.img, 
+				nx, ny, self.w, self.h
+			);
+		}
 
 		self._ctx.rotate(-angle);
 		self._ctx.translate(-self.x, -self.y);
@@ -137,6 +153,8 @@ function Card(ctx, x, y, w, h, card_id){
 			var x_complete = false;
 			var y_complete = false;
 			var angle_complete = false;
+			var w_complete = false;
+			var h_complete = false;
 
 			//MOVE X
 			var x_interpolation = Math.abs((self._tx - self.x) * self._speed);
@@ -168,9 +186,27 @@ function Card(ctx, x, y, w, h, card_id){
 				}
 			}
 
-			//CHANGE angle
-			// console.debug('target ' + self._target_angle + ' ' + self._angle);
+			//Change Width
+			if(self._target_width != self.w){
+				self.w = self.w + 9;
+				if(self.w > self._target_width){
+					self.w > self._target_width;
+				}
+			}else{
+				w_complete = true;
+			}
 
+			//Change Height
+			if(self._target_height != self.h){
+				self.h = self.h + 16;
+				if(self.h > self._target_height){
+					self.h > self._target_height;
+				}
+			}else{
+				h_complete = true;
+			}
+			
+			//CHANGE angle
 			if(self._target_angle != self._angle){
 				if(self._direction == 'right'){
 					self._angle = self._angle + 10;
@@ -198,9 +234,19 @@ function Card(ctx, x, y, w, h, card_id){
 			}
 
 			//COMPLETE
-			if(x_complete && y_complete && angle_complete){
+			if(x_complete && y_complete && angle_complete && w_complete && h_complete){
 				self._moving = false;
 			}
 		}
+	};
+
+	this.ShowCard = function(){
+		self._show_card = true;
+		self._tx = 200;
+		self._ty = 400;
+		self._target_width = self._target_width * 2;
+		self._target_height = self._target_height * 2;
+		self._target_angle = 0;
+		self._moving = true;
 	};
 }
