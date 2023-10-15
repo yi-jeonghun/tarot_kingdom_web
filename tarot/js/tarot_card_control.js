@@ -60,17 +60,22 @@ function TarotCardControl(){
 			e.preventDefault();
 			e.stopPropagation();
 			self._screen_touched = true;
+			$('#id_debug').html('mouse down');
 		});
 		self._canvas.addEventListener("mouseup", (e) => {
 			e.preventDefault();
 			e.stopPropagation();
 			self._screen_touched = false;
+			$('#id_debug').html('mouse up');
 		});
 		var prev_x = -100;
 		var prev_y = -100;
 		self._canvas.addEventListener("mousemove", (e) => {
 			e.preventDefault();
 			e.stopPropagation();
+
+			$('#id_debug').html('mouse move');
+
 			var x = e.offsetX;
 			var y = e.offsetY;
 			if(self._screen_touched){

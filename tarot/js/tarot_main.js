@@ -212,7 +212,7 @@ function TarotMain(){
 				$('#id_menu_tarot_fortune').show();
 				if(self._menu_loaded_tarot_fortune == false | reload){
 					$('#id_menu_tarot_fortune').html('');
-					$('#id_menu_tarot_fortune').load(`./tarot_fortune.html`);
+					$('#id_menu_tarot_fortune').load(NoCacheURL(`./tarot_fortune.html`));
 					self._menu_loaded_tarot_fortune = true;
 				}
 				break;
@@ -220,7 +220,7 @@ function TarotMain(){
 				$('#id_menu_tarot_question').show();
 				if(self._menu_loaded_tarot_question == false | reload){
 					$('#id_menu_tarot_question').html('');
-					$('#id_menu_tarot_question').load(`./tarot_question.html`);
+					$('#id_menu_tarot_question').load(NoCacheURL(`./tarot_question.html`));
 					self._menu_loaded_tarot_question = true;
 				}
 				break;
@@ -228,7 +228,7 @@ function TarotMain(){
 				$('#id_menu_tarot_card').show();
 				if(self._menu_loaded_tarot_card == false | reload){
 					$('#id_menu_tarot_card').html('');
-					$('#id_menu_tarot_card').load(`./tarot_card.html`);
+					$('#id_menu_tarot_card').load(NoCacheURL(`./tarot_card.html`));
 					self._menu_loaded_tarot_card = true;
 				}
 				break;
@@ -236,7 +236,7 @@ function TarotMain(){
 				$('#id_menu_tarot_result').show();
 				if(self._menu_loaded_tarot_result == false | reload){
 					$('#id_menu_tarot_result').html('');
-					$('#id_menu_tarot_result').load(`./tarot_result.html`);
+					$('#id_menu_tarot_result').load(NoCacheURL(`./tarot_result.html`));
 					self._menu_loaded_tarot_result = true;
 				}
 				break;

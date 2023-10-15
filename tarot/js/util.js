@@ -32,3 +32,9 @@ function EscapeHtml(unsafe){
 				.replace(/"/g, "&quot;")
 				.replace(/'/g, "&#039;");
 }
+
+function NoCacheURL(url){
+	var r = url;
+	r += '?q=' + Date.now();
+	return r;
+}
