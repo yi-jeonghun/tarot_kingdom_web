@@ -15,6 +15,8 @@ function Card(ctx, x, y, w, h, card_id){
 	this._angle = 0;
 	this._target_angle = 0;
 	this._rotating = false;
+	this._is_focused = false;
+	this._direction = 'right';
 
 	this.MoveTo = function(x, y, delay){
 		self._tx = x;
@@ -24,7 +26,31 @@ function Card(ctx, x, y, w, h, card_id){
 	};
 
 	this.RotateTo = function(angle){
+		self._direction = 'right';
 		self._target_angle = angle;
+		if(self._target_angle > 360){
+			self._target_angle -= 360;
+		}
+		if(self._target_angle < 0){
+			self._target_angle += 360;
+		}
+		self._moving = true;
+	};
+
+	this.Rotate = function(degree){
+		if(degree > 0){
+			self._direction = 'right';
+		}else{
+			self._direction = 'left';
+		}
+
+		self._target_angle += degree;
+		if(self._target_angle > 360){
+			self._target_angle -= 360;
+		}
+		if(self._target_angle < 0){
+			self._target_angle += 360;
+		}
 		self._moving = true;
 	};
 
@@ -32,6 +58,35 @@ function Card(ctx, x, y, w, h, card_id){
 		self._img = img;
 	};
 
+	this.GetTilt = function(){
+		var tilt = 0;
+		if(self._angle > 180){
+			tilt = 180 - self._angle;
+		}else{
+			tilt = self._angle;
+		}
+		return tilt;
+	};
+
+	this.Focus = function(){
+		if(self._is_focused == false){
+			self._is_focusing = true;
+			self._is_defocusing = false;
+			self._is_focused = true;
+		}
+	};
+
+	this.Defocus = function(){
+		if(self._is_focused){
+			self._is_focusing = false;
+			self._is_defocusing = true;
+			self._is_focused = false;
+		}
+	};
+
+	this._is_focusing = false;
+	this._is_defocusing = false;
+	this._focusing_value = 0;
 	this.Draw = function(){
 		self._ctx.save();
 		self._ctx.translate(self.x, self.y);
@@ -39,9 +94,25 @@ function Card(ctx, x, y, w, h, card_id){
 		var angle = self._angle * Math.PI / 180;
 		self._ctx.rotate(angle);
 
-		var nx = self.w/-2; 0;//self.x;// - (self.w/2);
-		var ny = self.h * -1;//self.y;// - self.h;
+		var nx = self.w/-2;
+		var ny = self.h * -1;
 		ny = ny - 20;
+
+		if(self._is_focusing){
+			self._focusing_value = self._focusing_value + 3;
+			if(self._focusing_value > 30){
+				self._focusing_value = 30;
+				self._is_focusing = false;
+			}
+		}
+		if(self._is_defocusing){
+			self._focusing_value = self._focusing_value - 3;
+			if(self._focusing_value < 0){
+				self._focusing_value = 0;
+				self._is_defocusing = false;
+			}
+		}
+		ny = ny - self._focusing_value;
 
 		self._ctx.drawImage(
 			self._img.img, 
@@ -98,12 +169,30 @@ function Card(ctx, x, y, w, h, card_id){
 			}
 
 			//CHANGE angle
+			// console.debug('target ' + self._target_angle + ' ' + self._angle);
+
 			if(self._target_angle != self._angle){
-				self._angle = self._angle + 10;
-				if(self._angle > self._target_angle){
-					self._angle = self._target_angle;
+				if(self._direction == 'right'){
+					self._angle = self._angle + 10;
+					if(self._angle > self._target_angle){
+						self._angle = self._target_angle;
+					}	
+				}else{
+					self._angle = self._angle - 10;
+					if(self._angle < self._target_angle){
+						self._angle = self._target_angle;
+					}
+				}
+				if(self._angle > 360){
+					self._angle -= 360;
+				}
+				if(self._angle < 0){
+					self._angle += 360;
 				}
 			}
+
+			// console.debug('target ' + self._target_angle + ' ' + self._angle);
+
 			if(self._angle == self._target_angle){
 				angle_complete = true;
 			}

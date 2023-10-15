@@ -11,7 +11,8 @@ var STEP = {
 	SHUFFLE3:      'shuffle3',
 	SHUFFLE3_WAIT: 'shuffle3_wait',
 	SPREAD:        'spread',
-	SPREAD_WAIT:   'spread_wait'
+	SPREAD_WAIT:   'spread_wait',
+	ROTATE_WAIT:   'rotate_wait'
 };
 
 function TarotCardControl(){
@@ -36,6 +37,7 @@ function TarotCardControl(){
 	this._top_card_pos = {x:130, y:220};
 	this._bottom_card_pos = {x:0, y:0};
 	this._delay_incresement = 5;//5 milli seonds
+	this._screen_touched = false;
 
 	this.Init = function(){
 		self.InitCanvas();
@@ -53,33 +55,80 @@ function TarotCardControl(){
 
 	this.InitHandle = function(){
 		self._canvas.addEventListener("mousedown", (e) => {
-			var x = e.offsetX;
-			var y = e.offsetY;
-			// isDrawing = true;
-			console.debug('mouse down x ' + x + ' y ' + y);
+			e.preventDefault();
+			e.stopPropagation();
+			// var x = e.offsetX;
+			// var y = e.offsetY;
+			// // isDrawing = true;
+			self._screen_touched = true;
+			// console.debug('mouse down x ' + x + ' y ' + y);
 		});
 		self._canvas.addEventListener("mouseup", (e) => {
-			var x = e.offsetX;
-			var y = e.offsetY;
-			// isDrawing = true;
-			console.debug('mouse up x ' + x + ' y ' + y);
+			e.preventDefault();
+			e.stopPropagation();
+			self._screen_touched = false;
 		});
-		$('#id_canvas').on('mousemove', function(e){
+		var prev_x = -100;
+		var prev_y = -100;
+		self._canvas.addEventListener("mousemove", (e) => {
 			e.preventDefault();
 			e.stopPropagation();
 			var x = e.offsetX;
 			var y = e.offsetY;
 			// isDrawing = true;
-			console.debug('mouse move x ' + x + ' y ' + y);
+			if(self._screen_touched){
+				if(prev_x != -100 && prev_y != -100){
+					var diff_x = x - prev_x;
+					var diff_y = y - prev_y;
+					// console.debug('diff ' + diff_x + ' ' + diff_y);
+					if(diff_y > 0){
+						// console.debug('rotate right ');
+						if(diff_y > 5){
+							diff_y = 5;
+						}
+						self.Rotate(diff_y);
+					}
+					if(diff_y < 0){
+						// console.debug('rotate left ');
+						if(diff_y < -5){
+							diff_y = -5;
+						}
+						self.Rotate(diff_y);
+					}
+				}
+				prev_x = x;
+				prev_y = y;
+			}
 		});
-		// self._canvas.addEventListener("mousemove", (e) => {
-		// 	e.preventDefault();
-		// 	e.stopPropagation();
-		// 	var x = e.offsetX;
-		// 	var y = e.offsetY;
-		// 	// isDrawing = true;
-		// 	console.debug('mouse move x ' + x + ' y ' + y);
-		// });
+	};
+
+	this.Rotate = function(degree){
+		for(var i=0 ; i<self._card_list.length ; i++){
+			self._card_list[i].Rotate(degree);
+		}
+		self._step = STEP.ROTATE_WAIT;
+	};
+
+	this.Focus = function(){
+		var min_tilt = 180;
+		var focusing_index = -1;
+		for(var i=0 ; i<self._card_list.length ; i++){
+			var card = self._card_list[i];
+			var tilt = card.GetTilt();
+			if(tilt < min_tilt){
+				min_tilt = tilt;
+				focusing_index = i;
+			}
+		}
+
+		for(var i=0 ; i<self._card_list.length ; i++){
+			var card = self._card_list[i];
+			if(i == focusing_index){
+				card.Focus();
+			}else{
+				card.Defocus();
+			}
+		}
 	};
 
 	this.InitCanvas = function(){
@@ -126,31 +175,6 @@ function TarotCardControl(){
 		}
 	};
 
-	this.DrawCard = function(card){
-		// self._ctx.save();
-
-		// if(self._step == STEP.SPREAD_WAIT){
-		// 	var translate_x = self._card_img.dw * 2;
-		// 	var translate_y = self._card_img.dh * 2;
-
-		// 	self._ctx.translate(-translate_x, -translate_y);
-		// 	self._ctx.rotate(card._angle * Math.PI / 180);
-	
-		// 	self._ctx.drawImage(self._card_img.img, 
-		// 		0, 0, self._card_img.nw, self._card_img.nh, 
-		// 		card.x, card.y, self._card_img.dw, self._card_img.dh);
-
-		// 	self._ctx.translate(translate_x, translate_y);
-
-		// }else{
-			self._ctx.drawImage(self._card_img.img, 
-				0, 0, self._card_img.nw, self._card_img.nh, 
-				card.x, card.y, self._card_img.dw, self._card_img.dh);	
-		// }
-
-		// self._ctx.restore();	
-	};
-
 	this.DISP_CardList = function(){
 		var width = 300 / 3;
 		var height = 532 / 3;
@@ -180,8 +204,8 @@ function TarotCardControl(){
 
 		switch(self._step){
 			case STEP.IDLE:
-				window.requestAnimationFrame(self.Update);
-				return;
+				// window.requestAnimationFrame(self.Update);
+				break;
 			case STEP.SHUFFLE1:
 				self.Shuffle1();
 				break;
@@ -217,6 +241,13 @@ function TarotCardControl(){
 					self._step = STEP.IDLE;
 				}
 				break;
+			case STEP.ROTATE_WAIT:
+				self.Focus();
+				if(self.StillMoving() == false){
+					console.debug('STEP.IDLE ');
+					self._step = STEP.IDLE;
+				}
+				break;
 		}
 
 		self.Clear();
@@ -233,7 +264,7 @@ function TarotCardControl(){
 	};
 
 	this.GetRandom = function(){
-		var r = Math.floor(Math.random() * 78);
+		var r = Math.floor(Math.random() * self._card_count);
 
 		if(r < 20){
 			r += 10;
