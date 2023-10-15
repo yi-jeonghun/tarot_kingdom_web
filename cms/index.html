@@ -32,21 +32,24 @@
 				</table>
 			</div>
 			<div class="col-11 col-md-8 border" style="height: 100%; overflow: auto;">
+				<div class="d-flex justify-content-between" style="width: 100%;">
+					<div class="" id="id_label_fortune_and_sub_question"></div>
+					<div class="text-end">
+						<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('all')">All</button>
+						<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('ar')">Major</button>
+						<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('cups')">Cups</button>
+						<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('pentacles')">Pentacles</button>
+						<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('swords')">Swords</button>
+						<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('wands')">Wands</button>
+						<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('계급')">계급</button>
+					</div>
+				</div>
 				<table class="table">
 					<thead>
 						<tr>
 							<th>No</th>
 							<th>Card</th>
 							<th>Read</th>
-							<th class="text-end">
-								<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('all')">All</button>
-								<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('ar')">Major</button>
-								<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('cups')">Cups</button>
-								<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('pentacles')">Pentacles</button>
-								<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('swords')">Swords</button>
-								<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('wands')">Wands</button>
-								<button type="button" class="btn btn-sm btn-light" onClick="window._cms.Filter('계급')">계급</button>
-							</th>
 						</tr>	
 					</thead>
 					<tbody id="id_div_tarot_card_list">
