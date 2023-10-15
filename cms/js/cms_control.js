@@ -72,7 +72,7 @@ function CMSControl(){
 						</td>
 						<td>
 							<i onClick="window._cms.OpenSubQuestionModal('${fortune.key}', 'edit', ${self._fortune_sub_question_list[s].index})" style="cursor:pointer" class="fas fa-edit"></i>
-							<i onClick="window._cms.DeleteQuestion('${fortune.key}', ${self._fortune_sub_question_list[s].index})" style="cursor:pointer" class="fas fa-trash"></i>
+							<i onClick="window._cms.DeleteQuestion('${fortune.key}', ${self._fortune_sub_question_list[s].index})" style="cursor:pointer" class="fas fa-trash-alt"></i>
 						</td>
 					</tr>
 					`;
@@ -250,6 +250,7 @@ function CMSControl(){
 		self._selected_sub_question_index = null;
 		self._selected_fortune_and_question_key = self._fortune_list[idx].key;
 
+		$('#id_label_fortune_and_sub_question').html(self._fortune_list[idx].name);
 		self.DISP_RarotCardList(self._selected_fortune_and_question_key);
 	};
 
@@ -258,6 +259,16 @@ function CMSControl(){
 		self._selected_sub_question_index = sub_question_index;
 		self._selected_fortune_and_question_key = self._fortune_list[fortune_index].key + '-' + sub_question_index;
 
+		var h = '';
+		h += self._fortune_list[fortune_index].name;
+		for(var i=0 ; i<self._fortune_sub_question_list.length ; i++){
+			if(self._fortune_sub_question_list[i].parent_fortune_key == self._fortune_list[fortune_index].key){
+				if(self._fortune_sub_question_list[i].index == sub_question_index){
+					h += ' > ' + self._fortune_sub_question_list[i].question;
+				}
+			}
+		}
+		$('#id_label_fortune_and_sub_question').html(h);
 		self.DISP_RarotCardList(self._selected_fortune_and_question_key);
 	};
 
@@ -289,7 +300,7 @@ function CMSControl(){
 			h += `<tr>
 				<td>${i+1}</td>
 				<td><img onClick="${on_click}" src="../tarot/img/${tarot_card_key}.jpg" style="cursor:pointer; width:${self._width}; height:${self._height}"></td>
-				<td colspan='2' id="id_text_tarot_read-${tarot_card_key}"></td>
+				<td id="id_text_tarot_read-${tarot_card_key}"></td>
 			</tr>`;
 		}
 		$('#id_div_tarot_card_list').html(h);
