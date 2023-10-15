@@ -99,6 +99,20 @@ function TarotCardControl(){
 				prev_y = y;
 			}
 		});
+
+		self._canvas.addEventListener("touchstart", function(e){
+			$('#id_debug').html('touch start');
+		});
+		self._canvas.addEventListener("touchend", function(e){
+			$('#id_debug').html('touch end');
+		});
+		self._canvas.addEventListener("touchcancel", function(e){
+			$('#id_debug').html('touch cancel');
+		});
+		self._canvas.addEventListener("touchmove", function(e){
+			$('#id_debug').html('touch move');
+		});
+		
 	};
 
 	this.Rotate = function(degree){
