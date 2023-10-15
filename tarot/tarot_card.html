@@ -14,10 +14,16 @@
 			</div>
 		</div>
 	</div>
+	<canvas class="border" id="id_canvas"></canvas>
 	<div class="container-fluid">
-	<div class="rows" id="id_div_card_list">
-
+		<div class="rows" id="id_div_card_list">
+			<div class="col-12">
+				<button type="button" class="btn btn-primary" onClick="window._tarot_card_control.StartShuffle()">Shuffle</button>
+				<button type="button" class="btn btn-primary" onClick="window._tarot_card_control.StartSpread()">Spread</button>
+			</div>
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript" src="./js/Card.js"></script>
 <script type="text/javascript" src="./js/tarot_card_control.js"></script>
