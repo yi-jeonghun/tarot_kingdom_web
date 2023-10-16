@@ -101,18 +101,57 @@ function TarotCardControl(){
 		});
 
 		self._canvas.addEventListener("touchstart", function(e){
+			self._screen_touched = true;
 			$('#id_debug').html('touch start');
 		});
 		self._canvas.addEventListener("touchend", function(e){
+			self._screen_touched = false;
 			$('#id_debug').html('touch end');
 		});
 		self._canvas.addEventListener("touchcancel", function(e){
+			self._screen_touched = false;
 			$('#id_debug').html('touch cancel');
 		});
 		self._canvas.addEventListener("touchmove", function(e){
+			e.preventDefault();
+			e.stopPropagation();
 			$('#id_debug').html('touch move');
+			var x = e.touches[0].clientX;
+			var y = e.touches[0].clientY;
+			console.debug('y ' + y);
+			if(self._screen_touched){
+				if(prev_x != -100 && prev_y != -100){
+					var diff_x = x - prev_x;
+					var diff_y = y - prev_y;
+					console.debug('diff_y ' + diff_y);
+					if(diff_y > 0){
+						if(diff_y > 5){
+							diff_y = 5;
+						}
+						self.Rotate(diff_y);
+					}
+					if(diff_y < 0){
+						if(diff_y < -5){
+							diff_y = -5;
+						}
+						self.Rotate(diff_y);
+					}
+				}
+				prev_x = x;
+				prev_y = y;
+			}
 		});
-		
+	};
+
+	this.OngoingTouchIndexById = function(idToFind) {
+		for (let i = 0; i < ongoingTouches.length; i++) {
+			const id = ongoingTouches[i].identifier;
+	
+			if (id === idToFind) {
+				return i;
+			}
+		}
+		return -1; // not found
 	};
 
 	this.Rotate = function(degree){
